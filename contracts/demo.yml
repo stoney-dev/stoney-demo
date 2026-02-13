@@ -1,0 +1,13 @@
+version: 1
+suite: demo
+contracts:
+  - name: health
+    scenarios:
+      - id: health_ok
+        http:
+          method: GET
+          path: /health
+        expect:
+          status: 200
+          json:
+            ok: true

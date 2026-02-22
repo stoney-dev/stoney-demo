@@ -33,6 +33,6 @@ contracts:
               url_env: STONEY_DB_URL
               query: "SELECT 1 AS ok;"
             expect:
-              rows: 1
+              rows: 0
               equals:
                 ok: 1

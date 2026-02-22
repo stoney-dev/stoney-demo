@@ -1,0 +1,38 @@
+version: 1
+suite: demo
+
+contracts:
+  - name: health
+    scenarios:
+      - id: health_ok
+        steps:
+          - http:
+              method: GET
+              path: /health
+            expect:
+              status: 200
+              json:
+                ok: true
+
+  - name: exec_checks
+    scenarios:
+      - id: node_present
+        steps:
+          - exec:
+              run: "node -v"
+            expect:
+              exit_code: 0
+              stdout_contains: "v"
+
+  - name: db_invariants
+    scenarios:
+      - id: db_smoke
+        steps:
+          - sql:
+              driver: postgres
+              url_env: STONEY_DB_URL
+              query: "SELECT 1 AS ok;"
+            expect:
+              rows: 1
+              equals:
+                ok: 1

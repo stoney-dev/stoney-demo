@@ -11,16 +11,50 @@ permissions:
 jobs:
   stoney:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: demo
+        options: >-
+          --health-cmd="pg_isready -U postgres -d demo"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+
     steps:
       - uses: actions/checkout@v4
+
+      # Install pg_isready client on the VM (sometimes not present by default)
+      - name: Install Postgres client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Wait for Postgres
+        run: |
+          for i in {1..30}; do
+            if pg_isready -h postgres -p 5432 -U postgres -d demo; then
+              echo "Postgres is ready"
+              exit 0
+            fi
+            echo "Waiting for Postgres..."
+            sleep 1
+          done
+          echo "Postgres did not become ready in time"
+          exit 1
+        env:
+          PGPASSWORD: postgres
 
       - name: Run Stoney
         uses: stoney-dev/stoney@v0
         with:
           base_url: ${{ secrets.STONEY_BASE_URL }}
-          token: ${{ secrets.STONEY_TOKEN }}
           suite: "contracts/*.yml"
           retries: "2"
           timeout_ms: "15000"
           comment_pr: "true"
-          db_url: ${{ secrets.STONEY_DB_URL }}
+          db_url: postgresql://postgres:postgres@postgres:5432/demo

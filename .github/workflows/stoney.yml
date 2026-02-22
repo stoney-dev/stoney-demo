@@ -49,7 +49,7 @@ jobs:
             printf '%s\n' "${files[@]}"
           fi
           echo ""
-          done
+          
 
       - name: Install Postgres client
         run: |

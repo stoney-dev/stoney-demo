@@ -11,28 +11,76 @@ permissions:
 jobs:
   stoney:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: demo
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres -d demo"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run Stoney (files + Jira)
-        uses: stoney-dev/stoney@v0
+      - name: Debug contracts folder + glob expansion
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "== PWD =="
+          pwd
+          echo ""
+          echo "== contracts/ listing =="
+          ls -la contracts || true
+          echo ""
+          echo "== glob expansion (contracts/*.yml) =="
+          shopt -s nullglob
+          files=(contracts/*.yml)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "NO FILES MATCHED contracts/*.yml"
+          else
+            printf '%s\n' "${files[@]}"
+          fi
+          echo ""
+          done
+
+      - name: Install Postgres client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Wait for Postgres
+        run: |
+          echo "Waiting for postgres on localhost:5432..."
+          for i in {1..45}; do
+            if pg_isready -h localhost -p 5432 -U postgres -d demo; then
+              echo "✅ Postgres is ready"
+              exit 0
+            fi
+            echo "⏳ postgres not ready yet..."
+            sleep 1
+          done
+
+          echo "❌ Postgres did not become ready in time"
+          docker ps -a || true
+          docker logs "${{ job.services.postgres.id }}" || true
+          exit 1
         env:
-          # DB (optional)
-          STONEY_DB_URL: ${{ secrets.STONEY_DB_URL }}
+          PGPASSWORD: postgres
+
+      - name: Run Stoney
+        uses: stoney-dev/stoney@v0
         with:
           base_url: ${{ secrets.STONEY_BASE_URL }}
           suite: "contracts/*.yml"
-
-          # Pull suite(s) from Jira issues
-          jira_issue: ${{ secrets.STONEY_JIRA_ISSUE }}
-          jira_base_url: ${{ secrets.JIRA_BASE_URL }}
-          jira_email: ${{ secrets.JIRA_EMAIL }}
-          jira_api_token: ${{ secrets.JIRA_API_TOKEN }}
-
-          comment_pr: "true"
           retries: "2"
           timeout_ms: "15000"
-
-          # leave off until you want to test CREATE
-          jira_create_on_failure: "false"
-          jira_project_key: "KAN"
+          comment_pr: "true"
+          db_url: postgresql://postgres:postgres@localhost:5432/demo

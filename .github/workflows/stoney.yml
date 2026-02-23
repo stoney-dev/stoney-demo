@@ -27,22 +27,6 @@ jobs:
           --health-timeout=5s
           --health-retries=20
 
-
-    services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: demo
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd="pg_isready -U postgres -d demo"
-          --health-interval=5s
-          --health-timeout=5s
-          --health-retries=20
-
     steps:
       - uses: actions/checkout@v4
 
@@ -86,7 +70,7 @@ jobs:
           # local ephemeral DB in GitHub Actions
           db_url: postgresql://postgres:postgres@localhost:5432/demo
 
-          # ✅ THIS INPUT EXISTS in your action.yml (enforces req mapping)
+          # enforce req mapping (req.text/ac/issue etc—whatever your runner expects)
           require_req: "true"
 
           # Optional: load an additional suite YAML from a Jira issue code block

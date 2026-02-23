@@ -1,0 +1,32 @@
+version: 1
+suite: demo
+
+contracts:
+  - name: runtime_checks
+    scenarios:
+      - id: node_present
+        req:
+          issue: "KAN-124"
+          text: "CI runner must have Node installed"
+        steps:
+          - exec:
+              run: "node -v"
+            expect:
+              exit_code: 0
+              stdout_contains: "v"
+
+  - name: db_invariants
+    scenarios:
+      - id: db_smoke
+        req:
+          issue: "KAN-125"
+          text: "Database must be reachable and able to execute a simple query"
+        steps:
+          - sql:
+              driver: postgres
+              url_env: STONEY_DB_URL
+              query: "SELECT 1 AS ok;"
+            expect:
+              rows: 1
+              equals:
+                ok: 1

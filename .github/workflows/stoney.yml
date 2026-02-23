@@ -27,6 +27,22 @@ jobs:
           --health-timeout=5s
           --health-retries=20
 
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: demo
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres -d demo"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+
     steps:
       - uses: actions/checkout@v4
 

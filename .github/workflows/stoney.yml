@@ -35,7 +35,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y postgresql-client
 
-      - name: Wait for Postgres (localhost)
+      - name: Wait for Postgres
+        env:
+          PGPASSWORD: postgres
         run: |
           echo "Waiting for postgres on localhost:5432..."
           for i in {1..45}; do
@@ -55,10 +57,9 @@ jobs:
           echo "== Postgres logs =="
           docker logs "${{ job.services.postgres.id }}" || true
           exit 1
-        env:
-          PGPASSWORD: postgres
 
-      - name: Run Stoney
+
+      - name: Run Stoney (repo contracts + Jira validation)
         uses: stoney-dev/stoney@v0
         with:
           base_url: ${{ secrets.STONEY_BASE_URL }}
@@ -66,4 +67,14 @@ jobs:
           retries: "2"
           timeout_ms: "15000"
           comment_pr: "true"
+
           db_url: postgresql://postgres:postgres@localhost:5432/demo
+
+          # ✅ enforce + validate Jira issue keys referenced in contracts
+          require_jira_issue: "true"
+          validate_jira_issues: "true"
+
+          jira_base_url: ${{ secrets.JIRA_BASE_URL }}
+          jira_email: ${{ secrets.JIRA_EMAIL }}
+          jira_api_token: ${{ secrets.JIRA_API_TOKEN }}
+

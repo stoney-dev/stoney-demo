@@ -70,7 +70,7 @@ jobs:
           # local ephemeral DB in GitHub Actions
           db_url: postgresql://postgres:postgres@localhost:5432/demo
 
-          # ✅ THIS INPUT EXISTS in your action.yml (enforces req mapping)
+          # enforce req mapping (req.text/ac/issue etc—whatever your runner expects)
           require_req: "true"
 
           # Optional: load an additional suite YAML from a Jira issue code block

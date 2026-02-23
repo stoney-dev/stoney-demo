@@ -1,0 +1,18 @@
+version: 1
+suite: demo
+
+contracts:
+  - name: health
+    scenarios:
+      - id: health_ok
+        req:
+          issue: "KAN-123"
+          text: "Health endpoint must respond with 200 and ok=true"
+        steps:
+          - http:
+              method: GET
+              path: /health
+            expect:
+              status: 200
+              json:
+                ok: true

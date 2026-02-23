@@ -30,33 +30,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Debug contracts folder + glob expansion
-        shell: bash
-        run: |
-          set -euo pipefail
-          echo "== PWD =="
-          pwd
-          echo ""
-          echo "== contracts/ listing =="
-          ls -la contracts || true
-          echo ""
-          echo "== glob expansion (contracts/*.yml) =="
-          shopt -s nullglob
-          files=(contracts/*.yml)
-          if [ ${#files[@]} -eq 0 ]; then
-            echo "NO FILES MATCHED contracts/*.yml"
-          else
-            printf '%s\n' "${files[@]}"
-          fi
-          echo ""
-          
-
       - name: Install Postgres client
         run: |
           sudo apt-get update
           sudo apt-get install -y postgresql-client
 
       - name: Wait for Postgres
+        env:
+          PGPASSWORD: postgres
         run: |
           echo "Waiting for postgres on localhost:5432..."
           for i in {1..45}; do
@@ -64,18 +45,20 @@ jobs:
               echo "✅ Postgres is ready"
               exit 0
             fi
-            echo "⏳ postgres not ready yet..."
+            echo "⏳ $(date) postgres not ready yet..."
             sleep 1
           done
 
           echo "❌ Postgres did not become ready in time"
+          echo ""
+          echo "== Docker containers =="
           docker ps -a || true
+          echo ""
+          echo "== Postgres logs =="
           docker logs "${{ job.services.postgres.id }}" || true
           exit 1
-        env:
-          PGPASSWORD: postgres
 
-      - name: Run Stoney
+      - name: Run Stoney (repo contracts + optional Jira suite loading)
         uses: stoney-dev/stoney@v0
         with:
           base_url: ${{ secrets.STONEY_BASE_URL }}
@@ -83,4 +66,15 @@ jobs:
           retries: "2"
           timeout_ms: "15000"
           comment_pr: "true"
+
+          # local ephemeral DB in GitHub Actions
           db_url: postgresql://postgres:postgres@localhost:5432/demo
+
+          # ✅ THIS INPUT EXISTS in your action.yml (enforces req mapping)
+          require_req: "true"
+
+          # Optional: load an additional suite YAML from a Jira issue code block
+          jira_issue: ${{ secrets.STONEY_JIRA_ISSUE }}
+          jira_base_url: ${{ secrets.JIRA_BASE_URL }}
+          jira_email: ${{ secrets.JIRA_EMAIL }}
+          jira_api_token: ${{ secrets.JIRA_API_TOKEN }}

@@ -1,18 +1,19 @@
 version: 1
-suite: demo
+feature: demo
+description: Simple demo for Stoney (HTTP, exec, SQL)
 
 contracts:
   - name: health
-    scenarios:
+    description: Health endpoint must always respond correctly.
+    checks:
       - id: health_ok
-        req:
-          issue: "KAN-123"
-          text: "Health endpoint must respond with 200 and ok=true"
-        steps:
+        work_item: "KAN-123"
+        says: "Health endpoint must respond with 200 and ok=true"
+        do:
           - http:
               method: GET
               path: /health
-            expect:
+            then:
               status: 200
               json:
                 ok: true

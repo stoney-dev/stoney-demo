@@ -70,7 +70,7 @@ jobs:
           # local ephemeral DB in GitHub Actions
           db_url: postgresql://postgres:postgres@localhost:5432/demo
 
-          # ✅ new single switch
+          # ✅ new single switch: requires work_item and verifies issue exists
           require_jira: "true"
           jira_base_url: ${{ secrets.JIRA_BASE_URL }}
           jira_email: ${{ secrets.JIRA_EMAIL }}

@@ -1,32 +1,33 @@
 version: 1
-suite: demo
+feature: demo
+description: Runtime + DB invariants
 
 contracts:
   - name: runtime_checks
-    scenarios:
+    description: CI runtime sanity checks.
+    checks:
       - id: node_present
-        req:
-          issue: "KAN-124"
-          text: "CI runner must have Node installed"
-        steps:
+        work_item: "KAN-124"
+        says: "CI runner must have Node installed"
+        do:
           - exec:
               run: "node -v"
-            expect:
+            then:
               exit_code: 0
               stdout_contains: "v"
 
   - name: db_invariants
-    scenarios:
+    description: Database must be reachable in CI.
+    checks:
       - id: db_smoke
-        req:
-          issue: "KAN-125"
-          text: "Database must be reachable and able to execute a simple query"
-        steps:
+        work_item: "KAN-125"
+        says: "Database must be reachable and able to execute a simple query"
+        do:
           - sql:
               driver: postgres
               url_env: STONEY_DB_URL
               query: "SELECT 1 AS ok;"
-            expect:
+            then:
               rows: 1
               equals:
                 ok: 1

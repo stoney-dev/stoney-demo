@@ -9,10 +9,10 @@ contracts:
       - id: node_present
         work_item: "KAN-124"
         says: "CI runner must have Node installed"
-        do:
+        steps:
           - exec:
               run: "node -v"
-            then:
+            expect:
               exit_code: 0
               stdout_contains: "v"
 
@@ -22,12 +22,12 @@ contracts:
       - id: db_smoke
         work_item: "KAN-125"
         says: "Database must be reachable and able to execute a simple query"
-        do:
+        steps:
           - sql:
               driver: postgres
               url_env: STONEY_DB_URL
               query: "SELECT 1 AS ok;"
-            then:
+            expect:
               rows: 1
               equals:
                 ok: 1

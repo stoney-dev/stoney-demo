@@ -1,10 +1,14 @@
 version: 1
-suite: demo
+feature: demo
+description: Exec + SQL checks (v1 format)
 
 contracts:
   - name: exec_checks
-    scenarios:
+    description: Basic CI runtime validation.
+    checks:
       - id: node_present
+        work_item: "KAN-124"
+        says: "CI runner must have Node installed"
         steps:
           - exec:
               run: "node -v"
@@ -13,8 +17,11 @@ contracts:
               stdout_contains: "v"
 
   - name: db_invariants
-    scenarios:
+    description: Basic DB connectivity validation.
+    checks:
       - id: db_smoke
+        work_item: "KAN-125"
+        says: "Database must be reachable and able to execute a simple query"
         steps:
           - sql:
               driver: postgres

@@ -1,6 +1,6 @@
 version: 1
 feature: demo
-description: Simple demo for Stoney (HTTP, exec, SQL)
+description: Simple demo for Stoney (HTTP)
 
 contracts:
   - name: health
@@ -9,11 +9,11 @@ contracts:
       - id: health_ok
         work_item: "KAN-123"
         says: "Health endpoint must respond with 200 and ok=true"
-        do:
+        steps:
           - http:
               method: GET
               path: /health
-            then:
+            expect:
               status: 200
               json:
                 ok: true

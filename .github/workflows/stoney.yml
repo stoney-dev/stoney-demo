@@ -58,7 +58,7 @@ jobs:
           docker logs "${{ job.services.postgres.id }}" || true
           exit 1
 
-      - name: Run Stoney (repo contracts + Jira work item required)
+      - name: Run Stoney (repo contracts)
         uses: stoney-dev/stoney@v0
         with:
           base_url: ${{ secrets.STONEY_BASE_URL }}
@@ -67,11 +67,14 @@ jobs:
           timeout_ms: "15000"
           comment_pr: "true"
 
+          # ✅ stop on first failure
+          fail_fast: "true"
+
           # local ephemeral DB in GitHub Actions
           db_url: postgresql://postgres:postgres@localhost:5432/demo
 
-          # ✅ new single switch: requires work_item and verifies issue exists
-          require_jira: "true"
-          jira_base_url: ${{ secrets.JIRA_BASE_URL }}
-          jira_email: ${{ secrets.JIRA_EMAIL }}
-          jira_api_token: ${{ secrets.JIRA_API_TOKEN }}
+          # ✅ require work_item on every check
+          require_work_item: "true"
+
+          # optional: enforce the key format
+          work_item_pattern: "^KAN-\\d+$"

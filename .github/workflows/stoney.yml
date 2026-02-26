@@ -59,7 +59,7 @@ jobs:
           exit 1
 
       - name: Run Stoney (repo contracts)
-        uses: stoney-dev/stoney@v0
+        uses: stoney-dev/stoney@main
         with:
           base_url: ${{ secrets.STONEY_BASE_URL }}
           suite: "contracts/*.yml"

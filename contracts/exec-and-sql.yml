@@ -1,10 +1,10 @@
 version: 1
 feature: demo
-description: Runtime + DB invariants
+description: Exec + SQL checks (v1 format)
 
 contracts:
-  - name: runtime_checks
-    description: CI runtime sanity checks.
+  - name: exec_checks
+    description: Basic CI runtime validation.
     checks:
       - id: node_present
         work_item: "KAN-124"
@@ -17,7 +17,7 @@ contracts:
               stdout_contains: "v"
 
   - name: db_invariants
-    description: Database must be reachable in CI.
+    description: Basic DB connectivity validation.
     checks:
       - id: db_smoke
         work_item: "KAN-125"

@@ -2,8 +2,6 @@
 
 Welcome to the **Stoney Demo**! This project demonstrates "Requirements-as-Code" using Stoney, a framework designed to turn your technical requirements into automated, executable CI contracts.
 
----
-
 ## 🚀 Overview
 
 Instead of scattered documentation, Stoney allows you to define your system requirements as YAML contracts. These contracts are executed automatically in your CI pipeline, validating your HTTP APIs, database connectivity, and runtime environment.

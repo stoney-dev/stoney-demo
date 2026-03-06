@@ -1,10 +1,10 @@
 version: 1
 feature: demo
-description: Simple demo for Stoney (HTTP)
+description: HTTP health check against stoneydev.com
 
 contracts:
-  - name: health
-    description: Health endpoint must always respond correctly.
+  - name: health_endpoint
+    description: Health endpoint should respond with a valid payload.
     checks:
       - id: health_ok
         work_item: "KAN-123"
@@ -12,8 +12,15 @@ contracts:
         steps:
           - http:
               method: GET
-              path: /health
+              path: /api/health
+              headers:
+                Authorization: "Bearer ${STONEY_TOKEN}"
             expect:
               status: 200
               json:
                 ok: true
+                service: "stoney-web"
+                route: "/api/health"
+                mock:
+                  message: "health route responding"
+                  version: "v1"

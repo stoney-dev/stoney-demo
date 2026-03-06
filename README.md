@@ -1,6 +1,6 @@
 # Stoney Demo
 
-Welcome to the **Stoney Demo** repository! This project demonstrates "Requirements-as-Code" using Stoney, a framework designed to turn your technical requirements into automated, executable CI contracts.
+Welcome to the **Stoney Demo**! This project demonstrates "Requirements-as-Code" using Stoney, a framework designed to turn your technical requirements into automated, executable CI contracts.
 
 ---
 

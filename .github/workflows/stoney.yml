@@ -66,7 +66,6 @@ jobs:
           suite: "contracts/*.yml"
           retries: "2"
           timeout_ms: "15000"
-          comment_pr: "true"
           fail_fast: "true"
           db_url: postgresql://postgres:postgres@localhost:5432/demo
           require_work_item: "true"

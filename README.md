@@ -14,7 +14,7 @@ This repo showcases three core types of validation:
 
 
 
-----
+---
 
 ## 🛠 Features
 

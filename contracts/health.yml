@@ -1,18 +1,26 @@
 version: 1
-suite: demo
+feature: demo
+description: HTTP health check against stoneydev.com
 
 contracts:
-  - name: health
-    scenarios:
+  - name: health_endpoint
+    description: Health endpoint should respond with a valid payload.
+    checks:
       - id: health_ok
-        req:
-          issue: "KAN-123"
-          text: "Health endpoint must respond with 200 and ok=true"
+        work_item: "KAN-123"
+        says: "Health endpoint must respond with 200 and ok=true"
         steps:
           - http:
               method: GET
-              path: /health
+              path: /api/health
+              headers:
+                Authorization: "Bearer ${STONEY_TOKEN}"
             expect:
               status: 200
               json:
                 ok: true
+                service: "stoney-web"
+                route: "/api/health"
+                mock:
+                  message: "health route responding"
+                  version: "v1"

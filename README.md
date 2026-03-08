@@ -22,7 +22,7 @@ This repo showcases three core types of validation:
 * **Job Summaries:** Automatically generates a visual, human-readable report in your GitHub Actions "Summary" tab.
 * **Traceability:** Links every test to a `work_item` (e.g., `KAN-123`), keeping your tests accountable to your project management workflow.
 
----
+----
 
 ## 💻 How to use this in your workflow
 

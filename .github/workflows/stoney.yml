@@ -39,6 +39,7 @@ jobs:
         env:
           PGPASSWORD: postgres
         run: |
+          set -euo pipefail
           echo "Waiting for postgres on localhost:5432..."
           for i in {1..45}; do
             if pg_isready -h localhost -p 5432 -U postgres -d demo; then
@@ -59,7 +60,7 @@ jobs:
           exit 1
 
       - name: Run Stoney (repo contracts)
-        uses: stoney-dev/stoney@v1
+        uses: stoney-dev/stoney@release
         with:
           base_url: "https://stoneydev.com"
           token: ${{ secrets.STONEY_TOKEN }}

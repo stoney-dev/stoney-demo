@@ -68,6 +68,9 @@ jobs:
           retries: "2"
           timeout_ms: "15000"
           fail_fast: "true"
-          db_url: postgresql://postgres:postgres@localhost:5432/demo
+          db_url: "postgresql://postgres:postgres@localhost:5432/demo"
           require_work_item: "true"
           work_item_pattern: "^KAN-\\d+$"
+          report: "stoney-report.json"
+          artifact_name: "stoney-report"
+          comment_pr: "true"

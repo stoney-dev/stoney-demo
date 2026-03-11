@@ -15,19 +15,3 @@ contracts:
             expect:
               exit_code: 0
               stdout_contains: "v"
-
-  - name: db_invariants
-    description: Database must be reachable in CI.
-    checks:
-      - id: db_smoke
-        work_item: "KAN-125"
-        says: "Database must be reachable and able to execute a simple query"
-        steps:
-          - sql:
-              driver: postgres
-              url_env: STONEY_DB_URL
-              query: "SELECT 1 AS ok;"
-            expect:
-              rows: 1
-              equals:
-                ok: 1

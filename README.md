@@ -10,7 +10,7 @@ This repo showcases three core types of validation:
 
 * **HTTP Checks:** Verify API endpoints, response payloads, and service health (`health_endpoint.yml`).
 * **SQL Checks:** Ensure database connectivity and data invariants (`db_invariants.yml`).
-* **Exec Checks:** Validate runtime dependencies (e.g., verifying Node.js is present) (`runtime_checks.yml`)
+* **Exec Checks:** Validate runtime dependencies (e.g., verifying Node.js is present) (`runtime_checks.yml`).
 
 
 

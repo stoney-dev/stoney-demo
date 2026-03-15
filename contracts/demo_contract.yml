@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=https://stoneydev.com/schema.json
+version: 1
+feature: demo
+description: Public Stoney demo contracts against stoneydev.com
+
+contracts:
+  - name: health_endpoint
+    description: Verify the public health endpoint is reachable and returns the expected shape.
+    checks:
+      - id: health_ok
+        work_item: "KAN-123"
+        says: "The health endpoint must return 200 and identify the service."
+        steps:
+          - http:
+              method: GET
+              path: /api/health
+            expect:
+              status: 200
+              json:
+                ok: true
+                service: "stoney-web"
+                route: "/api/health"
+
+  - name: auth_enforcement
+    description: Verify protected routes reject unauthenticated requests.
+    checks:
+      - id: me_requires_auth
+        work_item: "KAN-124"
+        says: "Unauthenticated requests to /api/me must be rejected."
+        steps:
+          - http:
+              method: GET
+              path: /api/me
+            expect:
+              status: 401

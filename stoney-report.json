@@ -1,0 +1,35 @@
+{
+  "report_version": 1,
+  "base_url": "https://stoneydev.com/api",
+  "total": 1,
+  "failed": 1,
+  "passed": 0,
+  "ok": false,
+  "duration_ms": 616,
+  "results": [
+    {
+      "feature": "Example Feature",
+      "contract": "Health Check",
+      "id": "health-check-passes",
+      "ok": false,
+      "work_item": {
+        "key": "ENG-1",
+        "says": "The /health endpoint must return 200 OK"
+      },
+      "notes": [],
+      "steps": [
+        {
+          "ok": false,
+          "kind": "http",
+          "title": "http GET /health",
+          "status": 401,
+          "method": "GET",
+          "url": "https://stoneydev.com/api/health",
+          "notes": [
+            "Expected status 200 but got 401."
+          ]
+        }
+      ]
+    }
+  ]
+}
